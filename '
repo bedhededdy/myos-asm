@@ -1,3 +1,5 @@
+// FIXME: SEEMS LIKE WE ARE OFF BY 1 IN THE INTERRUPT HANDLERS
+//        WHERE HANDLER 7 IS BEING EXECUTED BY IRQ 8
 .section .text
 
 .set IRQ_BASE, 0x20
@@ -192,54 +194,10 @@ _tbl_init:
     lidt (idtr)
 
     # Let's write to the keyboard
-    # Read masks
     mov $0x21, %dx
     in %dx, %al
-    mov $0xa1, %dx
+    mov $0xa1, %dl
     in %dx, %al
-
-    # Init sequence
-    mov $0x20, %dx
-    mov $0x11, %al
-    out %al, %dx
-    nop
-    nop
-    mov $0xa0, %dx
-    out %al, %dx
-    nop
-    nop
-    mov $0x21, %dx
-    mov $0x20, %al
-    out %al, %dx
-    nop
-    nop
-    mov $0xa1, %dx
-    mov $0x28, %al
-    out %al, %dx
-    nop
-    nop
-    mov $0x21, %dx
-    mov $0x04, %al
-    out %al, %dx
-    nop
-    nop
-    mov $0xa1, %dx
-    mov $0x02, %al
-    out %al, %dx
-    nop
-    nop
-    mov $0x21, %dx
-    mov $0x01, %al
-    out %al, %dx
-    nop
-    nop
-    mov $0xa1, %dx
-    out %al, %dx
-    nop
-    nop
-
-    # TODO: RESTORE MASKS???
-
 
     # Now that we have initialized the IDT, we can safely enable interrupts
     sti
